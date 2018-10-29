@@ -1,0 +1,11 @@
+version: '3'
+services:
+  mm:
+    build: .
+    container_name: mm_container
+    tty: true
+    stdin_open: true
+    volumes:
+      - "./:/home/node/node-addon"
+    working_dir: /home/node/node-addon
+    

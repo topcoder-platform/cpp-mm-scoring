@@ -1,0 +1,11 @@
+{
+    "results": [
+        {
+            "output": [
+                "array",
+                "string",
+                "test"
+            ]
+        }
+    ]
+}

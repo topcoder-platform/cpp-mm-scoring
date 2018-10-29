@@ -1,0 +1,6 @@
+{
+"input": ["string"],
+"output": "std::string",
+"className": "MockedClass",
+"method": "testReturnComplexStrAsItIs"
+}

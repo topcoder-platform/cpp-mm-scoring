@@ -1,0 +1,16 @@
+{
+    "results": [
+        {
+            "output": "This string contains a \\ character."
+        },
+        {
+            "output": "This string contains a \" character."
+        },
+        {
+            "output": "This string contains a )\" sequence."
+        },
+        {
+            "output": "This string contains a R\"()\" sequence."
+        }
+    ]
+}

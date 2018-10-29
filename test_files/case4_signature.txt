@@ -1,0 +1,6 @@
+{
+"input": ["std::vector<double>"],
+"output": "std::vector<double>",
+"className": "MockedClass",
+"method": "testVectorDoubleInOutX2"
+}

@@ -1,0 +1,24 @@
+{
+    "error": "Compilation time error: use of undeclared identifier 'THIS_IS_AN_INVALID_LINE_THAT_WOULD_CAUSE_COMPILATION_ERROR'\n",
+    "results": [
+        {
+            "output": null,
+            "statistics": {
+                "memory": null,
+                "time": null
+            }
+        }
+    ],
+    "statistics": {
+        "memory": {
+            "max": null,
+            "mean": null,
+            "min": null
+        },
+        "time": {
+            "max": null,
+            "mean": null,
+            "min": null
+        }
+    }
+}

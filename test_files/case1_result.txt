@@ -1,0 +1,22 @@
+{
+    "results": [
+        {
+            "output": 26
+        },
+        {
+            "error": "Runtime error: string parameter is invalid",
+            "output": null
+        },
+        {
+            "error": "Runtime error: vector<int> must not be empty",
+            "output": null
+        },
+        {
+            "error": "Runtime error: vector<double> must not be empty",
+            "output": null
+        },
+        {
+            "output": 13
+        }
+    ]
+}

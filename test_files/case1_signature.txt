@@ -1,0 +1,6 @@
+{
+    "input": ["int", "double", "string", "vector<int>", "vector<double>", "vector<string>"],
+    "output": "int",
+    "className": "MockedClass",
+    "method": "testFullParameter"
+}

@@ -1,0 +1,6 @@
+{
+"input": ["std::vector<string>", "double"],
+"output": "std::vector<string>",
+"className": "MockedClass",
+"method": "testVectorStrInOutReverse"
+}

@@ -1,0 +1,6 @@
+{
+"input": ["std::vector<int>"],
+"output": "std::vector<int>",
+"className": "MockedClass",
+"method": "testVectorIntInOutSort"
+}
