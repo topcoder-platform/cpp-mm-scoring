@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "bash -c ./scripts/setup.sh",
+    "postinstall": "npm run rebuild",
     "configure": ". ./env.sh > /dev/null && node-gyp configure",
     "rebuild": ". ./env.sh > /dev/null && node-gyp rebuild",
     "test": "bash -c ./scripts/test.sh",
