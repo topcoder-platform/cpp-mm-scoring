@@ -30,7 +30,8 @@ cling () {
   tar --strip-components=1 -xj -f $CLING_BINARY -C cling-0.5/
   for folder in `ls -1 ./cling-0.5/include/`
   do
-    sudo ln -sF "${PWD}/cling-0.5/include/${folder}" /usr/local/include
+    rm -f /usr/local/include/${folder}
+    sudo ln -s "${PWD}/cling-0.5/include/${folder}" /usr/local/include
   done
   return 0
 }
@@ -43,10 +44,10 @@ nlohmann () {
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
   unzip -qo nlohmann.zip
-  sudo ln -sF "${PWD}/include/nlohmann" /usr/local/include
+  rm -f /usr/local/include/nlohmann
+  sudo ln -s "${PWD}/include/nlohmann" /usr/local/include
   return 0
 }
 
-echo "current pwd: ${PWD}"
 nlohmann
 cling
