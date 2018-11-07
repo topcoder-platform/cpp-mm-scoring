@@ -39,8 +39,7 @@
                       "-stdlib=libc++",
                       "-mmacosx-version-min='<!(echo $OS_VERSION)'",
                       "-D_GLIBCXX_USE_NANOSLEEP",
-                      "-DLLVMDIR=\"<!(echo $LLVM_INSTALL_PREFIX)\"",
-                      "-I<!(echo $LLVM_INSTALL_PREFIX)/include"
+                      "-DLLVMDIR=\"<!(echo $LLVM_INSTALL_PREFIX)\""
                     ]
                   },
                   "link_settings": {
@@ -53,7 +52,8 @@
             ],
             "include_dirs": [
               "<!(node -e \"require('nan')\")",
-              "<!(echo $NLOHMANN_JSON_INCLUDE_DIR)"
+              "<!(echo $NLOHMANN_JSON_INCLUDE_DIR)",
+              "<!(echo $LLVM_INSTALL_PREFIX)/include"
             ],
             "link_settings": {
               "libraries": [

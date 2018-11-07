@@ -8,7 +8,7 @@
     "postinstall": "npm run rebuild",
     "configure": ". ./env.sh > /dev/null && node-gyp configure",
     "rebuild": ". ./env.sh > /dev/null && node-gyp rebuild",
-    "test": "bash -c ./scripts/test.sh",
+    "test": ". ./env.sh > /dev/null && node node_modules/.bin/mocha",
     "lint": "eslint *.js test/*.js",
     "rebuild-demo": "cmake-js -O demo rebuild"
   },

@@ -10,6 +10,13 @@ CLING_BINARY="cling.tar.bz2"
 CURL_CMD="curl -Lso"
 SAFE_PWD=$(echo "$PWD" | sed 's/ /\\ /g')
 
+function ctrl_c() {
+  echo ""
+  echo "User interrupted"
+  rm -f ${CLING_BINARY} nlohmann.zip
+  exit -1
+}
+
 cling () {
   if [ ! -f ${CLING_BINARY} ]; then
     echo -e "\x1B[1m\x1B[31mcling binary not found.\x1B[97m\x1B[22m"
@@ -31,7 +38,7 @@ cling () {
   for folder in `ls -1 ./cling-0.5/include/`
   do
     rm -f /usr/local/include/${folder}
-    sudo ln -s "${PWD}/cling-0.5/include/${folder}" /usr/local/include
+    # sudo ln -s "${PWD}/cling-0.5/include/${folder}" /usr/local/include
   done
   return 0
 }
@@ -45,9 +52,11 @@ nlohmann () {
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
   unzip -qo nlohmann.zip
   rm -f /usr/local/include/nlohmann
-  sudo ln -s "${PWD}/include/nlohmann" /usr/local/include
+  # sudo ln -s "${PWD}/include/nlohmann" /usr/local/include
   return 0
 }
+
+trap ctrl_c INT
 
 nlohmann
 cling

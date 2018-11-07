@@ -47,8 +47,8 @@ json Runner::runSubmission(json data, string& submissionCode) {
     json retVal = constructDefaultRetJson(data.size());
 
     // Construct cling interpreter.
-    static const char* argv[1] = {"app"};
-    Interpreter interpreter(1, argv, LLVMDIR);
+    static const char* argv[3] = { "cling", "-I.sources/cling-0.5/include" };
+    Interpreter interpreter(3, argv, LLVMDIR);
     CompilerInstance* ci = interpreter.getCI();
     TextDiagnosticBuffer* buffer = new TextDiagnosticBuffer();
     ci->getDiagnostics().setClient(buffer, true);
