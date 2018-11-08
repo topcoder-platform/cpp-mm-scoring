@@ -10,6 +10,9 @@ CLING_BINARY="cling.tar.bz2"
 CURL_CMD="curl -Lso"
 SAFE_PWD=$(echo "$PWD" | sed 's/ /\\ /g')
 
+rm -rf /tmp/cpp-mm-scoring
+mkdir /tmp/cpp-mm-scoring
+
 function ctrl_c() {
   echo ""
   echo "User interrupted"
@@ -37,8 +40,8 @@ cling () {
   tar --strip-components=1 -xj -f $CLING_BINARY -C cling-0.5/
   for folder in `ls -1 ./cling-0.5/include/`
   do
-    rm -f /usr/local/include/${folder}
-    # sudo ln -s "${PWD}/cling-0.5/include/${folder}" /usr/local/include
+    rm -f /tmp/cpp-mm-scoring/cling-0.5
+    ln -s "${PWD}/cling-0.5" /tmp/cpp-mm-scoring
   done
   return 0
 }
@@ -51,8 +54,9 @@ nlohmann () {
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
   unzip -qo nlohmann.zip
-  rm -f /usr/local/include/nlohmann
-  # sudo ln -s "${PWD}/include/nlohmann" /usr/local/include
+  
+  rm -f /tmp/cpp-mm-scoring/include
+  ln -s "${PWD}/include" /tmp/cpp-mm-scoring
   return 0
 }
 
