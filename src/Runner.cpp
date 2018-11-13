@@ -20,6 +20,12 @@ using namespace clang;
 using namespace nlohmann;
 using namespace std;
 
+#define BUFSIZE 1024
+
+char target[ BUFSIZE ];
+
+const char* homeDir = getenv("HOME");
+
 Runner::Runner(json signature) {
     validValueTypes["int"] = ValueType::vt_int;
     validValueTypes["double"] = ValueType::vt_double;
@@ -46,9 +52,13 @@ json Runner::runSubmission(json data, string& submissionCode) {
     // Construct the JSON return value.
     json retVal = constructDefaultRetJson(data.size());
 
+    // set include path
+    sprintf(target, "-I%s/.cpp-mm-scoring/cling-0.5/include", (char *) homeDir);
+
     // Construct cling interpreter.
-    static const char* argv[3] = { "cling", "-I/tmp/cpp-mm-scoring/cling-0.5/include" };
-    Interpreter interpreter(3, argv, LLVMDIR);
+    static const char* argv[2] = { "cling", nullptr };
+    argv[1] = &target[0];
+    Interpreter interpreter(2, argv, LLVMDIR);
     CompilerInstance* ci = interpreter.getCI();
     TextDiagnosticBuffer* buffer = new TextDiagnosticBuffer();
     ci->getDiagnostics().setClient(buffer, true);

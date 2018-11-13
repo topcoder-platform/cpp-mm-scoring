@@ -7,11 +7,12 @@ mkdir -p .sources
 cd .sources
 
 CLING_BINARY="cling.tar.bz2"
-CURL_CMD="curl -Lso"
+CURL_CMD="curl -Lo"
 SAFE_PWD=$(echo "$PWD" | sed 's/ /\\ /g')
+BASE_DIR=$HOME/.cpp-mm-scoring
 
-rm -rf /tmp/cpp-mm-scoring
-mkdir /tmp/cpp-mm-scoring
+mkdir -p $BASE_DIR
+rm -rf ${BASE_DIR}/*
 
 function ctrl_c() {
   echo ""
@@ -30,7 +31,7 @@ cling () {
     else
       . /etc/lsb-release
       UBUNTU_VERSION=$(echo $DISTRIB_RELEASE | awk -F"." '{print $1}')
-      echo "Downloading file for Ubuntu $DISTRIB_RELEASE"
+      echo "Downloading file for debian"
       $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-11-05_ubuntu${UBUNTU_VERSION}.tar.bz2"
     fi
   fi
@@ -38,11 +39,7 @@ cling () {
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mcling\x1B[97m\x1B[22m"
   mkdir -p cling-0.5
   tar --strip-components=1 -xj -f $CLING_BINARY -C cling-0.5/
-  for folder in `ls -1 ./cling-0.5/include/`
-  do
-    rm -f /tmp/cpp-mm-scoring/cling-0.5
-    ln -s "${PWD}/cling-0.5" /tmp/cpp-mm-scoring
-  done
+  ln -s "${PWD}/cling-0.5" ${BASE_DIR}/
   return 0
 }
 
@@ -55,8 +52,7 @@ nlohmann () {
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
   unzip -qo nlohmann.zip
   
-  rm -f /tmp/cpp-mm-scoring/include
-  ln -s "${PWD}/include" /tmp/cpp-mm-scoring
+  ln -s "${PWD}/include" ${BASE_DIR}/
   return 0
 }
 

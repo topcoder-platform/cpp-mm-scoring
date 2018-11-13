@@ -6,5 +6,5 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - "./:/home/node/node-addon"
-    working_dir: /home/node/node-addon
+      - "./:/cpp-mm-scoring"
+    working_dir: /cpp-mm-scoring
