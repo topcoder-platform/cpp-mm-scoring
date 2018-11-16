@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const cases = require('./test_files/cases.json');
-const runSubmissionAsync = require('.');
+const { runSubmissionAsync } = require('.');
 
 const args = process.argv.slice(2);
 let index = 0;
