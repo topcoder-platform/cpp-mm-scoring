@@ -7,6 +7,7 @@ mkdir -p .sources
 cd .sources
 
 CLING_BINARY="cling.tar.bz2"
+BOOST_BINARY="boost.tar.bz2"
 CURL_CMD="curl -Lo"
 SAFE_PWD=$(echo "$PWD" | sed 's/ /\\ /g')
 BASE_DIR=$HOME/.cpp-mm-scoring
@@ -17,7 +18,7 @@ rm -rf ${BASE_DIR}/*
 function ctrl_c() {
   echo ""
   echo "User interrupted"
-  rm -f ${CLING_BINARY} nlohmann.zip
+  rm -f ${CLING_BINARY} ${BOOST_BINARY} nlohmann.zip
   exit -1
 }
 
@@ -26,6 +27,8 @@ cling () {
     echo -e "\x1B[1m\x1B[31mcling binary not found.\x1B[97m\x1B[22m"
     if [[ $(uname -s) == 'Darwin' ]]; then
       MAC_VERSION=$(sw_vers|grep ProductVersion|awk -F" " '{print $2}'|tr -d .)
+      # could exist 10126 or 10.12.6
+      MAC_VERSION=${MAC_VERSION::4}
       echo "Downloading file for Mac OS X `sw_vers|grep ProductVersion|awk -F" " '{print $2}'`"
       $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-11-05_mac${MAC_VERSION}.tar.bz2"
     else
@@ -56,7 +59,21 @@ nlohmann () {
   return 0
 }
 
+boost () {
+  if [ ! -f ${BOOST_BINARY} ]; then
+    echo -e "\x1B[1m\x1B[31mboost binary not found. Downloading\x1B[97m\x1B[22m"
+    $CURL_CMD $BOOST_BINARY "https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2"
+  fi
+
+  echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mboost\x1B[97m\x1B[22m"
+  mkdir -p boost
+  tar --strip-components=1 -xj -f $BOOST_BINARY -C boost/
+
+  ln -s "${PWD}/boost" ${BASE_DIR}/
+  return 0
+}
 trap ctrl_c INT
 
 nlohmann
 cling
+boost

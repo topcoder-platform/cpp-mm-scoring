@@ -23,6 +23,7 @@ class MemoryMonitor;
 class Runner {
 public:
     explicit Runner(nlohmann::json signature);
+    nlohmann::json checkSignatureExists(std::string& submissionCode);
     nlohmann::json runSubmission(nlohmann::json data,
                                  std::string& submissionCode);
 
@@ -31,6 +32,7 @@ public:
 
 private:
     enum ValueType {
+        vt_void,
         vt_int,
         vt_double,
         vt_string,

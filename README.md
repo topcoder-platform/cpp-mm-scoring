@@ -12,17 +12,20 @@ For that we would like to experiment the [CLING](https://github.com/root-project
 - cmake 3.2+
 - g++ 7+
 - Python 2.7
+- curl
 - Operation system: MacOS, Linux(recommend to use Ubuntu 18.04)
 - docker and docker-compose (optional if you want to test with docker image)
-
 Require xcode under macOS or proper C/C++ compiler toolchain, like GCC under linux.
 
 Please ensure node-gyp tool is installed successfully to build Node.js native addon later.
+
+Please note currently dependencies will installed by `scripts/setup.sh` for you and you just make sure curl exist in your OS.
 
 ### C++ libraries
 
 - [cling](https://github.com/root-project/cling)
 - [nlohmann json](https://github.com/nlohmann/json)
+- [Boost TTI](https://www.boost.org/doc/libs/1_68_0/libs/tti/doc/html/index.html)
 
 ## Install dependencies
 
@@ -73,15 +76,14 @@ You will need the following actions after building the code:
 
 Edit `env.sh` to configure environment variables for cling and nlohmann/json correctly.
 
-**Cling\_LIB_\DIR** is the directory that contains `lib` folder of cling tool. 
-**Cling\_DIR** is the directory that contains file `ClingConfig.cmake`. 
-**LLVM\_INSTALL\_PREFIX** is the directory that contains `c++-analyzer`, `ccc-analyzer` file and  `lib` folder of cling tool. 
+**Cling\_LIB_\DIR** is the directory that contains `lib` folder of cling tool.
+**Cling\_DIR** is the directory that contains file `ClingConfig.cmake`.
+**LLVM\_INSTALL\_PREFIX** is the directory that contains `c++-analyzer`, `ccc-analyzer` file and  `lib` folder of cling tool.
 **NLOHMANN\_JSON\_INCLUDE\_DIR** is the c++ header folder that contains `nlohmann/json.hpp`.
 
-Now run following commands to build the source code(it will compile addons codes during `npm install` process):
+Now run following commands to build the source code(it will compile addons codes during `npm install` process)(no need to run `source env.sh` at first any more):
 
 ```
-source env.sh
 npm install
 npm run lint # lint with airbnb code style
 ```
@@ -104,7 +106,7 @@ The target executable `MarathonMatchScoring` would be generated in folder `demo`
 
 You must preload **libcling** to resolve run errors like `undefined symbol: _ZN4llvm11raw_ostream6handleEv`.
 
-If you  still meet errors, you can frist try to use absolute path for **LD_PRELOAD** under linux or **DYLD_INSERT_LIBRARIES** under osx. 
+If you  still meet errors, you can frist try to use absolute path for **LD_PRELOAD** under linux or **DYLD_INSERT_LIBRARIES** under osx.
 For example, `export LD_PRELOAD=$CLING_LIB_DIR/libcling.so`, or you may use `export LD_LIBRARY_PATH=$CLING_LIB_DIR`(may also use `sudo ldconfig` later) and then `LD_PRELOAD=libcling.so <application>` under linux.
 Or you may use similar feature **DYLD_LIBRARY_PATH**(`export LD_LIBRARY_PATH=$CLING_LIB_DIR`) & **DYLD_INSERT_LIBRARIES** (`DYLD_INSERT_LIBRARIES=libcling.dylib <application>`) under osx with SIP is turned off.
 
@@ -115,11 +117,26 @@ Please notes some recent OSX with SIP enabled may not work for [DYLD_INSERT_LIBR
 Possible fix from  [Library not loaded](https://trac.macports.org/ticket/54939) is `sudo ln -s /Applications/Xcode.app/Contents/Frameworks/libcling.dylib $CLING_LIB_DIR/libcling.dylib`
 Last option for recent OSX need to copy `libcling.dylib` to running directory with `cp $CLING_LIB_DIR/libcling.dylib .`·(recommend actually to avoid many issues for osx).
 
-I test codes on OSX 10.14 and Ubuntu 18.04 and in both of them everthing worked fine.
+I test codes on OSX 10.14 and Ubuntu 18.04 and in both of them everything worked fine.
+
+If you try to run docker image under OSX please make sure you remove `boost.tar.bz2` in `.sources` folder at first to avoid conflicts.
+
+You may see such warning under OSX while all tests are passed or failed.
+```
+Warning in cling::IncrementalParser::CheckABICompatibility():
+Possible C++ standard library mismatch, compiled with _LIBCPP_VERSION '4000'
+Extraction of runtime standard library version was: '3700'
+```
+or similar logs under Ubuntu.
+```
+Warning in cling::IncrementalParser::CheckABICompatibility():
+  Possible C++ standard library mismatch, compiled with __GLIBCXX__ '20160609'
+  Extraction of runtime standard library version was: '20180720'
+```
+You may need to recompile cling using your local development tools.
 
 ### Docker notes
+To save your time I provide docker image you can build with `docker-compose build` and then run `docker-compose run mm-cpp`
+You have to run commands `npm install && npm run lint && npm test && npm run rebuild-demo` again one by one after run `docker-compose run mm-cpp` command.
 
-To save your time I provide docker image you can build with `docker-compose build` and then run `docker-compose run mm`
-You have to run commands `npm install && npm run lint && npm test && npm run rebuild-demo` again one by one after run `docker-compose run mm` command.
-
-You can then follow Validation.md to verify codes build in Ubuntu 16.04 docker image.
+You can then follow Validation.md to verify codes build in Ubuntu 18.04 docker image.

@@ -12,10 +12,10 @@ cd demo
 
 You can run new node addons version tool in `build/Release/MarathonMatchScoring.node` in root directory.
 ```
-bash demo.sh <demo_index>
+bash scripts/demo.sh <demo_index>
 ```
 
-For example you can compare result `./demo/MarathonMatchScoring test_files 1` and `bash demo.sh 1`.
+For example you can compare result `./demo/MarathonMatchScoring test_files 1` and `bash scripts/demo.sh 1`.
 I did not change example commands later because new version will be much easier to test.
 
 - **test\_files\_path** represents path to the `test_files` folder of this submission. This folder contains some test CPP code and some input data of JSON format.
@@ -24,7 +24,7 @@ I did not change example commands later because new version will be much easier 
 Example:
 
 ```
-./MarathonMatchScoring ../test_files 3
+./demo/MarathonMatchScoring test_files 3
 ```
 In this submission, test cases are provided as below. Here's a brief introduction of their design rationale.
 

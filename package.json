@@ -10,11 +10,18 @@
     "rebuild": ". ./env.sh > /dev/null && node-gyp rebuild",
     "test": ". ./env.sh > /dev/null && node node_modules/.bin/mocha",
     "lint": "eslint *.js test/*.js",
-    "rebuild-demo": "cmake-js -O demo rebuild"
+    "rebuild-demo": ". ./env.sh > /dev/null && cmake-js -O demo rebuild"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/topcoder-platform/cpp-mm-scoring.git"
+  },
+  "bugs": {
+    "url": "https://github.com/topcoder-platform/cpp-mm-scoring/issues"
+  },
   "dependencies": {
     "bindings": "^1.3.0",
     "bluebird": "^3.5.2",

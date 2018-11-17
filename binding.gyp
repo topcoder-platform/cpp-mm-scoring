@@ -53,7 +53,8 @@
             "include_dirs": [
               "<!(node -e \"require('nan')\")",
               "<!(echo $NLOHMANN_JSON_INCLUDE_DIR)",
-              "<!(echo $LLVM_INSTALL_PREFIX)/include"
+              "<!(echo $LLVM_INSTALL_PREFIX)/include",
+              "<!(echo $BOOST_DIR)",
             ],
             "link_settings": {
               "libraries": [

@@ -8,21 +8,41 @@ if (!process.env || (os.platform() === 'linux' && (!process.env.LD_PRELOAD || !p
   process.exit(1);
 }
 
-/**
- * Run submission code with cling
- * @param signature the method signature
- * @param input the method input
- * @param submissionCode the submission code
- */
-module.exports = (signature, input, submissionCode) => new Promise((resolve, reject) => {
-  try {
-    return addon.runSubmissionAsync(signature, input, submissionCode, (err, result) => {
-      if (err) {
-        return typeof err === 'string' ? reject(new Error(err)) : reject(err);
-      }
-      return resolve(result);
-    });
-  } catch (e) {
-    return reject(e);
-  }
-});
+
+module.exports = {
+  /**
+   * Check signature with cling and boost tti
+   * @param signature the method signature
+   * @param submissionCode the submission code
+   */
+  checkSignatureAsync: (signature, submissionCode) => new Promise((resolve, reject) => {
+    try {
+      return addon.checkSignatureAsync(signature, submissionCode, (err, result) => {
+        if (err) {
+          return typeof err === 'string' ? reject(new Error(err)) : reject(err);
+        }
+        return resolve(result);
+      });
+    } catch (e) {
+      return reject(e);
+    }
+  }),
+  /**
+   * Run submission code with cling
+   * @param signature the method signature
+   * @param input the method input
+   * @param submissionCode the submission code
+   */
+  runSubmissionAsync: (signature, input, submissionCode) => new Promise((resolve, reject) => {
+    try {
+      return addon.runSubmissionAsync(signature, input, submissionCode, (err, result) => {
+        if (err) {
+          return typeof err === 'string' ? reject(new Error(err)) : reject(err);
+        }
+        return resolve(result);
+      });
+    } catch (e) {
+      return reject(e);
+    }
+  }),
+};
