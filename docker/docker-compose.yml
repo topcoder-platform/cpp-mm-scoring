@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mm-cpp:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: mm-cpp
+    tty: true
+    stdin_open: true
+    volumes:
+      - "../:/cpp-mm-scoring"
+    working_dir: /cpp-mm-scoring

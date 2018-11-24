@@ -19,8 +19,14 @@ using namespace cling;
 using namespace clang;
 using namespace nlohmann;
 using namespace std;
+#define BUFSIZE 1024
+
+char target[ BUFSIZE ];
+char target2[ BUFSIZE ];
+const char* homeDir = getenv("HOME");
 
 Runner::Runner(json signature) {
+    validValueTypes["void"] = ValueType::vt_void;
     validValueTypes["int"] = ValueType::vt_int;
     validValueTypes["double"] = ValueType::vt_double;
     validValueTypes["std::string"] = ValueType::vt_string;
@@ -39,16 +45,123 @@ Runner::Runner(json signature) {
     this->variablePrefix = "__TCMM__NEVER_DEFINE_THIS_";
     this->pMemoryMonitor = nullptr;
 }
-
+json  Runner::checkSignatureExists(string& submissionCode)
+{
+    json retVal = R"(
+        {
+          "error": null,
+          "exist": false
+        }
+        )"_json;
+    // set include path
+    sprintf(target, "-I%s/.cpp-mm-scoring/boost", (char *) homeDir);
+    sprintf(target2, "-I%s/.cpp-mm-scoring/cling-0.5/include", (char *) homeDir);
+    // Construct cling interpreter.
+    static const char* argv[3] = { "cling", nullptr, nullptr };
+    argv[1] = &target[0];
+    argv[2] = &target2[0];
+    Interpreter interpreter(3, argv, LLVMDIR);
+    CompilerInstance* ci = interpreter.getCI();
+    TextDiagnosticBuffer* buffer = new TextDiagnosticBuffer();
+    ci->getDiagnostics().setClient(buffer, true);
+    const SourceManager& sm = ci->getSourceManager();
+    Interpreter::CompilationResult cr;
+    // Declare the class definition.
+    try {
+        // We suggest this declaration would never fail.
+        interpreter.declare("#include <boost/tti/tti.hpp>");
+        interpreter.declare("#include <boost/mpl/vector.hpp>");
+        string methodName = safeGetString(signature["method"]);
+        ostringstream ss;
+        ss<<"has_member_function_"<<methodName<<"<";
+        string className= safeGetString(signature["className"]);
+        ss<<className<<",";
+        string outputType = safeGetString(signature["output"]);
+        const ValueType& outpuyValueType = validValueTypes[outputType];
+        if (outpuyValueType == ValueType::vt_void) {
+            ss << "void";
+        } else if (outpuyValueType == ValueType::vt_int) {
+            ss << "int";
+        } else if (outpuyValueType == ValueType::vt_double) {
+            ss << "double";
+        } else if (outpuyValueType == ValueType::vt_vector_int) {
+            ss << "std::vector<int>";
+        } else if (outpuyValueType == ValueType::vt_vector_double) {
+            ss << "std::vector<double>";
+        } else if (outpuyValueType == ValueType::vt_string) {
+            ss << "std::string";
+        } else if (outpuyValueType == ValueType::vt_vector_string) {
+            ss << "std::vector<std::string>";
+        } else {
+            throw runtime_error(string("unexpected output type: " + outputType));
+        }
+        if (numInput>0) {
+            ss << ","<<"boost::mpl::vector<";
+        }
+        for (int i=0; i<numInput; ++i) {
+            if (i>0 && i<=numInput-1 ) {
+                ss << ",";
+            }
+            // Check if the input parameters are of correct format.
+            string inputType = signature["input"][i];
+            const ValueType& inputValueType = validValueTypes[inputType];
+            if (inputValueType == ValueType::vt_void) {
+                ss << "void";
+            } else if (inputValueType == ValueType::vt_int) {
+                ss << "int";
+            } else if (inputValueType == ValueType::vt_double) {
+                ss << "double";
+            } else if (inputValueType == ValueType::vt_vector_int) {
+                ss << "std::vector<int>";
+            } else if (inputValueType == ValueType::vt_vector_double) {
+                ss << "std::vector<double>";
+            } else if (inputValueType == ValueType::vt_string) {
+                ss << "std::string";
+            } else if (inputValueType == ValueType::vt_vector_string) {
+                ss << "std::vector<std::string>";
+            } else {
+                throw runtime_error(string("unexpected input type: " + inputType));
+            }
+        }
+        if(numInput>0){
+            ss<<">";
+        }
+        interpreter.declare("BOOST_TTI_HAS_MEMBER_FUNCTION("+methodName+");");
+        cr = interpreter.declare(submissionCode);
+        if (cr != Interpreter::CompilationResult::kSuccess) {
+            retVal["error"] = fillClingErrors(buffer, sm, "Compilation time error: ");
+            return retVal;
+        }
+        cling::Value res;
+        ss<<">::value;";
+        cr = interpreter.process(ss.str(), &res);
+        if (cr != Interpreter::CompilationResult::kSuccess) {
+            retVal["error"] = fillClingErrors(buffer, sm, "Compilation time error: ");
+            return retVal;
+        }
+        retVal["exist"] = res.getAs<long long>() == 1;
+        return retVal;
+    } catch (exception& e) {
+        retVal["error"] = string("Compilation time error: ") + e.what();
+        return retVal;
+    } catch (...) {
+        retVal["error"] = "Unknown compilation time error";
+        return retVal;
+    }
+}
 json Runner::runSubmission(json data, string& submissionCode) {
     // Check the signature compatibility.
     validateInputData(data);
     // Construct the JSON return value.
     json retVal = constructDefaultRetJson(data.size());
 
+    // set include path
+    sprintf(target, "-I%s/.cpp-mm-scoring/cling-0.5/include", (char *) homeDir);
+
     // Construct cling interpreter.
-    static const char* argv[1] = {"app"};
-    Interpreter interpreter(1, argv, LLVMDIR);
+    static const char* argv[2] = { "cling", nullptr };
+    argv[1] = &target[0];
+    Interpreter interpreter(2, argv, LLVMDIR);
     CompilerInstance* ci = interpreter.getCI();
     TextDiagnosticBuffer* buffer = new TextDiagnosticBuffer();
     ci->getDiagnostics().setClient(buffer, true);
@@ -391,7 +504,10 @@ string Runner::getOutputStatement(const string& varName) {
     } else if (valueType == ValueType::vt_vector_string) {
         ss << "std::vector<std::string> " << varName << ";";
         return ss.str();
-    } else {
+    } else if (valueType == ValueType::vt_void) {
+       ss << "void " << varName << ";";
+       return ss.str();
+    }else {
         throw runtime_error(string("unexpected output type: ") + outputType);
     }
 }
