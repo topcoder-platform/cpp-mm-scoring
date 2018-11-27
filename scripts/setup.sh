@@ -49,11 +49,11 @@ cling () {
 nlohmann () {
   if [ ! -f "nlohmann.zip" ]; then
     echo -e "\x1B[1m\x1B[31mnlohmann binary not found. Downloading\x1B[97m\x1B[22m"
-    $CURL_CMD $BASE_DIR/nlohmann.zip "https://github.com/nlohmann/json/releases/download/v3.4.0/include.zip"
+    $CURL_CMD nlohmann.zip "https://github.com/nlohmann/json/releases/download/v3.4.0/include.zip"
   fi
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
-  unzip -qo $BASE_DIR/nlohmann.zip
+  unzip -qo nlohmann.zip -d $BASE_DIR
   
   #ln -s "${PWD}/include" ${BASE_DIR}/
   return 0
