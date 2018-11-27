@@ -41,8 +41,8 @@ cling () {
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mcling\x1B[97m\x1B[22m"
   mkdir -p cling-0.5
-  tar --strip-components=1 -xj -f $CLING_BINARY -C cling-0.5/
-  ln -s "${PWD}/cling-0.5" ${BASE_DIR}/
+  tar --strip-components=1 -xj -f $CLING_BINARY -C $BASE_DIR/cling-0.5/
+  #ln -s "${PWD}/cling-0.5" ${BASE_DIR}/
   return 0
 }
 
@@ -53,9 +53,9 @@ nlohmann () {
   fi
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mnlohmann\x1B[97m\x1B[22m"
-  unzip -qo nlohmann.zip
+  unzip -qo $BASE_DIR/nlohmann.zip
   
-  ln -s "${PWD}/include" ${BASE_DIR}/
+  #ln -s "${PWD}/include" ${BASE_DIR}/
   return 0
 }
 
@@ -67,9 +67,9 @@ boost () {
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mboost\x1B[97m\x1B[22m"
   mkdir -p boost
-  tar --strip-components=1 -xj -f $BOOST_BINARY -C boost/
+  tar --strip-components=1 -xj -f $BOOST_BINARY -C $BASE_DIR/boost/
 
-  ln -s "${PWD}/boost" ${BASE_DIR}/
+ # ln -s "${PWD}/boost" ${BASE_DIR}/
   return 0
 }
 trap ctrl_c INT
