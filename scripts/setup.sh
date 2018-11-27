@@ -40,7 +40,7 @@ cling () {
   fi
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mcling\x1B[97m\x1B[22m"
-  mkdir -p cling-0.5
+  mkdir -p $BASE_DIR/cling-0.5
   tar --strip-components=1 -xj -f $CLING_BINARY -C $BASE_DIR/cling-0.5/
   #ln -s "${PWD}/cling-0.5" ${BASE_DIR}/
   return 0
@@ -66,7 +66,7 @@ boost () {
   fi
 
   echo -e "\x1B[97m\x1B[22minstalling \x1B[1m\x1B[32mboost\x1B[97m\x1B[22m"
-  mkdir -p boost
+  mkdir -p $BASE_DIR/boost
   tar --strip-components=1 -xj -f $BOOST_BINARY -C $BASE_DIR/boost/
 
  # ln -s "${PWD}/boost" ${BASE_DIR}/
