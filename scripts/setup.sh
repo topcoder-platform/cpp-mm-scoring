@@ -30,12 +30,12 @@ cling () {
       # could exist 10126 or 10.12.6
       MAC_VERSION=${MAC_VERSION::4}
       echo "Downloading file for Mac OS X `sw_vers|grep ProductVersion|awk -F" " '{print $2}'`"
-      $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-11-05_mac${MAC_VERSION}.tar.bz2"
+      $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-12-11_mac${MAC_VERSION}.tar.bz2"
     else
       . /etc/lsb-release
       UBUNTU_VERSION=$(echo $DISTRIB_RELEASE | awk -F"." '{print $1}')
       echo "Downloading file for debian"
-      $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-11-05_ubuntu${UBUNTU_VERSION}.tar.bz2"
+      $CURL_CMD $CLING_BINARY "https://root.cern.ch/download/cling/cling_2018-12-11_ubuntu${UBUNTU_VERSION}.tar.bz2"
     fi
   fi
 
