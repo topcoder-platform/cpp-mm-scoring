@@ -61,7 +61,7 @@ brew install nlohmann_json
 ### Install dependencies notes for Ubuntu
 
 You can download latest valid package match your version of Ubuntu from [cling download page](https://root.cern.ch/download/cling/).
-If you are using Ubuntu 18.04 you can download [ling_2018-10-27_sources.tar.bz2](https://root.cern.ch/download/cling/cling_2018-10-27_sources.tar.bz2).
+If you are using Ubuntu 18.04 you can download [cling_2018-12-11_sources.tar.bz2](https://root.cern.ch/download/cling/cling_2018-12-11_sources.tar.bz2).
 
 * Unzip the source code to a folder, like `/usr/local/cling/0.5_1`.
 
